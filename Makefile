@@ -10,11 +10,15 @@ build:
 	docker-compose -f docker/docker-compose.yml build
 
 up:
-	docker-compose -f docker/docker-compose.yml up -d
+	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
 
 down:
 	@echo "Using docker-compose file: $(DOCKER_COMPOSE_FILE)"
-	@echo "Stopping and removing containers, networks, images, and volumes..."
-	docker-compose -f $(DOCKER_COMPOSE_FILE) down --rmi all --volumes --remove-orphans
-	@echo "Removing dangling Docker resources..."
-	docker system prune -f --volumes
+	@echo "Stopping and removing containers, networks, and volumes related to the project..."
+	docker-compose -f $(DOCKER_COMPOSE_FILE) down --rmi local --volumes --remove-orphans
+
+logs:
+	docker-compose -f docker/docker-compose.yml logs -f
+
+shell:
+	docker-compose -f docker/docker-compose.yml exec precision_scraper /bin/bash

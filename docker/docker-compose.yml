@@ -8,7 +8,12 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./data:/app/data
-    environment:
-      - DATABASE_PATH=/app/data/scraper.sqlite
+      - data:/app/data
+      - lib:/app/lib
     restart: unless-stopped
+
+volumes:
+  data:
+    name: precision_scraper_data
+  lib:
+    name: precision_scraper_lib
