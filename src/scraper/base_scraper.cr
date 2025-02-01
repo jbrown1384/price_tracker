@@ -1,5 +1,5 @@
 require "./scraper_interface"
-require "./product.cr"
+require "../structs/product"
 
 abstract class BaseScraper < ScraperInterface::Base
   property endpoint : String
