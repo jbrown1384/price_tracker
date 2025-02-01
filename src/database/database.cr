@@ -26,16 +26,16 @@ module Database
     end
   end
 
-  def self.save_price(product_name : String, price : Float64)
-    begin
-      DB.open(DB_PATH) do |db|
-        db.exec "INSERT INTO prices (product_name, price, scraped_at) VALUES (?, ?, ?)", product_name, price, Time.local
-        Utils::Logger.info("saved price for product: #{product_name} (#{price}) at #{Time.local}")
-      end
-    rescue ex
-      Utils::Logger.error("saving price for product: #{product_name} (#{price}): #{ex.message}")
-      raise ex
-    end
+  def self.clear
+    db = self.get_connection
+    db.exec "DELETE FROM prices;"
+  end
+
+  def self.get_connection
+    DB.open(DB_PATH)
+  rescue ex
+    Utils::Logger.error("failed to retrieve connection: #{ex.message}")
+    raise ex
   end
 
   def self.fetch_prices(product_name : String) : Array(Hash(String, String | Float64))
@@ -70,6 +70,18 @@ module Database
       end
     rescue ex
       Utils::Logger.error("fetching prices for product: #{product_name}: #{ex.message}")
+      raise ex
+    end
+  end
+
+  def self.save_price(product_name : String, price : Float64)
+    begin
+      DB.open(DB_PATH) do |db|
+        db.exec "INSERT INTO prices (product_name, price, scraped_at) VALUES (?, ?, ?)", product_name, price, Time.local
+        Utils::Logger.info("saved price for product: #{product_name} (#{price}) at #{Time.local}")
+      end
+    rescue ex
+      Utils::Logger.error("saving price for product: #{product_name} (#{price}): #{ex.message}")
       raise ex
     end
   end

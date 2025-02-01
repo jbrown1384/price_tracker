@@ -3,7 +3,7 @@ require "ecr"
 require "../controllers/controllers"
 
 get "/" do
-  Utils::Logger.info("Received GET request for '/'
+  Utils::Logger.info("Received GET request for '/'")
   Controllers::DashboardController.index
 rescue ex
   Utils::Logger.error("Error handling GET '/': #{ex.message}")
