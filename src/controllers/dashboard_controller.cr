@@ -9,21 +9,24 @@ module Controllers
       (0..59).each { |minute| prices_by_minute[minute] = nil }
 
       raw_data.each do |entry|
-        scraped_at = Time.parse(
-          entry["scraped_at"].to_s,
-          "%Y-%m-%d %H:%M:%S.%L",
-          Time::Location::UTC
-        )
-        mapped_minute = scraped_at.minute
-        price = entry["price"].to_f
-        prices_by_minute[mapped_minute] = price
+        begin
+          scraped_at = Time.parse(
+            entry["scraped_at"].to_s,
+            "%Y-%m-%d %H:%M:%S.%L",
+            Time::Location::UTC
+          )
+          mapped_minute = scraped_at.minute
+          price = entry["price"].to_f
+          prices_by_minute[mapped_minute] = price
+        rescue ex
+          Utils::Logger.warning("parsing entry #{entry}: #{ex.message}")
+        end
       end
 
       x_axis_minutes = minutes_in_hour
       price_values = (0..59).map { |minute| prices_by_minute[minute] }
 
       rendered = ECR.render "src/views/index.ecr"
-
       rendered
     end
   end
