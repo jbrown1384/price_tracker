@@ -1,0 +1,18 @@
+name: app
+version: 0.1.0
+
+authors:
+  - "Jeremy Brown"
+targets:
+  app:
+    main: src/main.cr
+crystal: ">= 1.5.0"
+license: MIT
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+  lexbor:
+    github: kostya/lexbor
+    branch: master
