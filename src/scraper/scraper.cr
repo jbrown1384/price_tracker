@@ -30,7 +30,6 @@ module Scraper
         price_element = product_card.css(".price").first
         raw_price = price_element ? price_element.inner_text : "0"
         price = raw_price.try { |p| p.gsub(/[^\d\.]/, "").to_f } || 0.0
-        
         Database.save_price(name, price)
         puts "Name: #{name}: Price Found: $#{price}"
         return price_element ? price_element.inner_text : nil

@@ -1,25 +1,25 @@
 require "kemal"
-require "./scraper"
+require "../brands/glitch"
 
 get "/" do
   product_name = "AW SuperFast Roadster"
   raw_data = Database.fetch_prices(product_name)
-
   minutes_in_hour = (0..59).to_a.map(&.to_s)
+
   prices_by_minute = {} of Int32 => Float64 | Nil
   (0..59).each do |minute| 
     prices_by_minute[minute] = nil
   end
 
-  raw_data.each do |row|
+  raw_data.each do |entry|
     scraped_at = Time.parse(
-      row["scraped_at"].to_s,
+      entry["scraped_at"].to_s,
       "%Y-%m-%d %H:%M:%S.%L",
       Time::Location::UTC
     ) 
 
     mapped_minute = scraped_at.minute
-    price = row["price"].to_f
+    price = entry["price"].to_f
 
     prices_by_minute[mapped_minute] = price
   end
@@ -46,7 +46,7 @@ get "/" do
         const data = {
           labels: xAxisMinutes,
           datasets: [{
-            label: 'Price ($)',
+            label: 'Price ($)', 
             data: prices,
             borderColor: 'rgba(75, 192, 192, 1)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -92,12 +92,14 @@ get "/" do
           }
         };
 
+        // Render the chart
         const ctx = document.getElementById('priceGraph').getContext('2d');
         new Chart(ctx, config);
 
+        // Trigger backend scraping on button click and refresh the page
         async function triggerScrape() {
           const response = await fetch("/scrape", { method: "POST" });
-          location.reload();
+          location.reload(); // Refresh to update the chart with new data
         }
       </script>
     </body>
@@ -106,12 +108,13 @@ get "/" do
 end
 
 
-post "/scrape" do
-  product_name = "AW SuperFast Roadster"
-  price = Scraper.scrape_price(product_name)
-  if price
-    "Scraping completed! New price: #{price}"
-  else
-    "Could not find the product on the webpage."
-  end
-end
+# post "/scrape" do
+#   # Scrape the price of AW SuperFast Roadster
+#   product_name = "AW SuperFast Roadster"
+#   price = Scraper.scrape_price(product_name)
+#   if price
+#     "Scraping completed! New price: #{price}"
+#   else
+#     "Could not find the product on the webpage."
+#   end
+# end

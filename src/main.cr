@@ -1,15 +1,24 @@
-require "./scraper"
-require "./server"
+require "./scraper/scraper_factory"
+require "kemal"
+require "./server/server"
+
+Database.setup
+
+brands = {
+  "glitch" => "https://bush-daisy-tellurium.glitch.me/",
+  # "another_brand" => "https://example.com/",
+}
 
 spawn do
-  product_name = "AW SuperFast Roadster"
   loop do
-    begin
-      puts "Starting scrape for #{product_name} at #{Time.utc}"
-      price = Scraper.scrape_price(product_name)
-      puts "Scraped price: #{price} at #{Time.utc}"
-    rescue ex
-      puts "Error during scraping: #{ex.message}"
+    brands.each do |brand, endpoint|
+      begin
+        scraper = ScraperFactory.create_scraper(brand, endpoint)
+        scraper.scrape_and_save
+        puts "Scraped and saved data for #{brand} at #{Time.utc}"
+      rescue ex
+        puts "Error scraping #{brand}: #{ex.message}"
+      end
     end
     sleep 60.seconds
   end
