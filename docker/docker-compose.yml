@@ -1,0 +1,11 @@
+services:
+  my_crystal_app:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    image: price-tracker-app:latest
+    container_name: my_crystal_app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
