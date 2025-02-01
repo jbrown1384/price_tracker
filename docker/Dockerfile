@@ -20,7 +20,7 @@ RUN shards install
 
 COPY . /app
 
-RUN mkdir -p /app/bin
+RUN mkdir -p /app/bin /app/data
 
 RUN crystal build \
     src/main.cr \
