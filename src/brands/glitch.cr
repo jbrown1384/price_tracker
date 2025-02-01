@@ -1,9 +1,14 @@
 require "../scraper/base_scraper"
 require "lexbor"
+require "set"
 
 class Glitch < BaseScraper
-  endpoint = "https://bush-daisy-tellurium.glitch.me/"
-  PRODUCTS = "AW SuperFast Roadster"
+  @@endpoint = "https://bush-daisy-tellurium.glitch.me/"
+  TARGET_PRODUCTS = Set(String).new(["AW SuperFast Roadster"])
+
+  def initialize
+    super(@@endpoint)
+  end
 
   def parse_products(html : String) : Array(Product)
     parser = Lexbor::Parser.new(html)
@@ -15,7 +20,7 @@ class Glitch < BaseScraper
 
       next unless name
       
-      if name == PRODUCTS
+      if TARGET_PRODUCTS.map(&.downcase).includes?(name.downcase)
         price_element = product_card.css(".price").first
         raw_price = price_element ? price_element.inner_text : "0"
         price = raw_price.try { |p| p.gsub(/[^\d\.]/, "").to_f } || 0.0

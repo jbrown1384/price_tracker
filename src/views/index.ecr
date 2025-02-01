@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html class="h-full bg-gray-100">
+  <head>
+    <title>Price Tracking for <%= product_name %></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://precisionecontrol.com/wp-content/uploads/2024/03/cropped-fav.png" type="image/png">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="/public/js/app.js" defer></script>
+  </head>
+  <body class="h-full">
+    <div class="min-h-full">
+      <nav class="bg-gray-800">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="flex h-16 items-center justify-between">
+            <div class="flex items-center">
+              <div class="shrink-0">
+                <img class="size-8" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500" alt="Precision eControl">
+              </div>
+              <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-4">
+                  <a href="" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Dashboard</a>
+                </div>
+              </div>
+            </div>
+            <div class="hidden md:block">
+              <div class="ml-4 flex items-center md:ml-6"></div>
+            </div>
+            <div class="-mr-2 flex md:hidden">
+
+            </div>
+          </div>
+        </div>
+
+        <div class="md:hidden" id="mobile-menu">
+          <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+            <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a>
+          </div>
+        </div>
+      </nav>
+
+      <header class="bg-white shadow-sm">
+        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <h1 class="text-2xl font-bold tracking-tight text-gray-900">Price Tracking for <%= product_name %></h1>
+        </div>
+      </header>
+      <main>
+        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <canvas
+            id="priceChart"
+            width="800"
+            height="400"
+            data-labels='<%= x_axis_minutes.to_json %>'
+            data-prices='<%= price_values.to_json %>'
+          ></canvas>
+          <button onclick="triggerScrape()">Scrape Latest Price</button>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
