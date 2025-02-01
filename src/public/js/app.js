@@ -58,12 +58,14 @@ function initializeChart() {
 async function triggerScrape() {
     try {
         const response = await fetch('/scrape', { method: 'POST' });
-        const result = await response.text();
-        console.log('Scrape Triggered:', result);
-        // location.reload();
+        if (response.ok) {
+            console.log('Scrape triggered successfully!');
+            location.reload();
+        } else {
+            console.error('Failed to trigger scrape:', response);
+        }
     } catch (error) {
         console.error('Error triggering scrape:', error);
-        alert('Failed to trigger scrape!');
     }
 }
 

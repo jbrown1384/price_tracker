@@ -1,9 +1,5 @@
-require "kemal"
-require "ecr"
-require "ecr/macros"
-
 module Controllers
-  module HomeController
+  module DashboardController
     def self.index
       product_name = "AW SuperFast Roadster"
       raw_data = Database.fetch_prices(product_name)
