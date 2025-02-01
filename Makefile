@@ -16,9 +16,3 @@ down:
 	@echo "Using docker-compose file: $(DOCKER_COMPOSE_FILE)"
 	@echo "Stopping and removing containers, networks, and volumes related to the project..."
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down --rmi local --volumes --remove-orphans
-
-logs:
-	docker-compose -f docker/docker-compose.yml logs -f
-
-shell:
-	docker-compose -f docker/docker-compose.yml exec precision_scraper /bin/bash

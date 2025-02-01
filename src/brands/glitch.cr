@@ -25,6 +25,7 @@ class Glitch < BaseScraper
         raw_price = price_element ? price_element.inner_text : "0"
         price = raw_price.try { |p| p.gsub(/[^\d\.]/, "").to_f } || 0.0
         products << Product.new(name, price)
+        Utils::Logger.debug("Parsed product: #{name} with price: #{price}")
       end
     end
 
