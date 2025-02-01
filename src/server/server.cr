@@ -3,7 +3,7 @@ require "ecr"
 require "../controllers/controllers"
 
 get "/" do
-  Controllers::HomeController.index
+  Controllers::DashboardController.index
 end
 
 post "/scrape" do

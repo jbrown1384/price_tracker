@@ -1,9 +1,8 @@
-require "./scraper/scraper_factory"
 require "kemal"
+require "./scraper/scraper_factory"
 require "./server/server"
 
 Database.setup
-
 brands = ["glitch"]
 
 spawn do
