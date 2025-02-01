@@ -1,11 +1,14 @@
 services:
-  my_crystal_app:
+  precision_scraper:
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
-    image: price-tracker-app:latest
-    container_name: my_crystal_app
+    image: my-precision_scraper-app:latest
+    container_name: precision_scraper
     ports:
       - "3000:3000"
     volumes:
       - ./data:/app/data
+    environment:
+      - DATABASE_PATH=/app/data/scraper.sqlite
+    restart: unless-stopped
