@@ -9,6 +9,9 @@ describe Database do
 
   describe "save price and fetch price records" do
     it "save a price record and fetches a price record" do
+      site = Site.new("test site", true)
+      product = Product.new(1, "test product new", true)
+
       product_name = "test product"
       price = 299.99
 
