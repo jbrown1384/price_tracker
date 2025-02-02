@@ -2,7 +2,7 @@ require "kemal"
 require "./utils/logger"
 require "./structs/site"
 require "./scraper/scraper_factory"
-require "./server/server"
+require "./routes/routes"
 
 begin
   Database.setup
