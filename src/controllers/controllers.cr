@@ -1,4 +1,7 @@
 require "ecr"
 require "ecr/macros"
+require "json"
+require "../structs/site"
+require "../utils/logger"
 require "./dashboard_controller"
 require "./scrape_controller"

@@ -18,7 +18,7 @@ shards:
 
   lexbor:
     git: https://github.com/kostya/lexbor.git
-    version: 3.2.0+git.commit.bc975e9688d0a9fc4616d34fdc74f1a42c01230b
+    version: 3.2.0
 
   radix:
     git: https://github.com/luislavena/radix.git

@@ -22,9 +22,7 @@ COPY . /app
 
 RUN mkdir -p /app/bin /app/data
 
-RUN crystal build \
-    src/main.cr \
-    --release -o /app/bin/app
+RUN crystal build src/main.cr --release -o /app/bin/app
 
 EXPOSE 3000
 

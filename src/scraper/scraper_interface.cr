@@ -2,7 +2,7 @@ require "../database/database"
 
 module ScraperInterface
   abstract class Base
-    abstract def parse_products(html : String) : Array(Product)
+    abstract def parse_products(html : String) : Array(ProductHistory)
 
     def scrape_and_save
       Utils::Logger.debug("starting scraping...")
@@ -10,11 +10,11 @@ module ScraperInterface
       html = fetch_html
       Utils::Logger.debug("fetched endpoint content from #{uri}")
 
-      products = parse_products(html)
-      Utils::Logger.info("parsed #{products.size} products")
+      product_histories = parse_products(html)
+      Utils::Logger.info("parsed #{product_histories.size} products")
 
-      save_products(products)
-      Utils::Logger.info("saved #{products.size} products")
+      save_product_histories(product_histories)
+      Utils::Logger.info("Saved #{product_histories.size} product history records")
     end
 
     private def fetch_html : String
@@ -25,9 +25,9 @@ module ScraperInterface
       raise ex
     end
 
-    private def save_products(products : Array(Product))
-      products.each do |product|
-        Database.save_price(product.name, product.price)
+    private def save_product_histories(product_histories : Array(ProductHistory))
+      product_histories.each do |history|
+        Database.save_product_history(history)
       end
     end
 
