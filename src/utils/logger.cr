@@ -11,6 +11,7 @@ module Utils
     def self.log(level : Level, message : String)
       formatted_message = "[#{level.to_s.upcase}] #{message}"
 
+      # log to STDOUT for debug and info messages
       case level
       when Level::Critical, Level::Error
         STDERR.puts(formatted_message)

@@ -6,9 +6,11 @@ module Controllers
 
       minutes_in_hour = (0..59).map(&.to_s)
       prices_by_minute = Hash(Int32, Float64?).new
+      # loads all minutes with nil values and we'll fill values in the next step
       (0..59).each { |minute| prices_by_minute[minute] = nil }
       product_history.each do |history|
         begin
+          # retrieve minute and put into correct display position
           mapped_minute = history.scraped_at.minute
           prices_by_minute[mapped_minute] = history.price
         rescue ex
@@ -16,6 +18,7 @@ module Controllers
         end
       end
       
+      # all minutes of the hour for the x-axis of the chart
       x_axis_minutes = minutes_in_hour
       price_values = (0..59).map { |minute| prices_by_minute[minute] }
 

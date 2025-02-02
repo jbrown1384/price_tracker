@@ -6,7 +6,10 @@ module Controllers
     def self.scrape(context : HTTP::Server::Context)
       begin
         site_name = "glitch"
+        
         site = fetch_site_by_name(Database.connection, site_name)
+        
+        # if site doesn't exist, return 404
         unless site
           context.response.status_code = HTTP::Status::NOT_FOUND.code
           context.response.content_type = "application/json"
@@ -14,6 +17,7 @@ module Controllers
           return
         end
 
+        #site found, scrape it
         scraper = ScraperFactory.create_scraper(site)
         scraper.scrape_and_save
         
@@ -30,6 +34,7 @@ module Controllers
   end
 end
 
+# retrieve site by name and return Site struct
 def self.fetch_site_by_name(db, name : String) : Site?
   db.query("SELECT id, name, active_status FROM sites WHERE name = ? AND active_status = 1", name) do |records|
     records.each do

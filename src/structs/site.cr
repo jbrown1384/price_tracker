@@ -7,6 +7,7 @@ struct Site
   property name : String
   property active_status : Bool
 
+  # initialize Site struct with id, name, active_status
   def initialize(
     @id : Int64,
     @name : String,
@@ -14,6 +15,7 @@ struct Site
   )
   end
 
+  # retrieve active products for the site
   def active_products(db) : Array(Product)
     active_products = Set(Product).new
 
@@ -29,6 +31,7 @@ struct Site
       end
     end
 
+    # convert active products as an array from a set
     active_products.to_a
   rescue ex
     Utils::Logger.error("Failed to retrieve active products for site '#{@name}': #{ex.message}")
