@@ -101,6 +101,7 @@ module Database
     Utils::Logger.info("Ensured data directory exists at #{data_dir}")
   end
 
+  #create default migrations table
   def self.ensure_migrations_table()
     db = self.connection
     db.exec <<-SQL
@@ -116,12 +117,14 @@ module Database
     raise ex
   end
 
+  # run all migrations that have not been applied
   def self.run_migrations()
     Utils::Logger.info("Running migrations")
     applied = fetch_applied_migrations()
     migrations = fetch_migration_files
 
     migrations.each do |migration|
+      # if migration has not been applied, run it
       unless applied.includes?(migration)
         apply_migration(migration)
       end
@@ -145,17 +148,17 @@ module Database
   
     applied_migrations
   rescue ex
-    Utils::Logger.critical("Failed to fetch applied migrations: #{ex.message}")
+    Utils::Logger.critical("fetching applied migrations: #{ex.message}")
     raise ex
   end  
 
   def self.fetch_migration_files : Array(String)
-    # select files that begin with a digit, followed by an underscore, and end with .cr
+    # select files that begin with a digit
     Dir.entries(MIGRATIONS_PATH)
-      .select { |file| file.matches?(/\A\d+_.*\.cr\z/)    }
+      .select { |file| file.matches?(/\A\d+/)    }
       .sort
   rescue ex
-    Utils::Logger.critical("Failed to fetch migration files: #{ex.message}")
+    Utils::Logger.critical("fetching migration files: #{ex.message}")
     raise ex
   end
 

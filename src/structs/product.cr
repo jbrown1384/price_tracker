@@ -4,6 +4,7 @@ struct Product
   property name : String
   property active_status : Bool
 
+  # initialize Product struct with id, site_id, name, active_status
   def initialize(
     @id : Int64,
     @site_id : Int64,
