@@ -1,10 +1,4 @@
-# Database Design
-
-## Database Choice
-
-- **SQLite:**
-
-## Schema Details
+# Database Schema Overview
 
 ### `sites` Table
 
@@ -31,3 +25,20 @@
 | `product_id` | INTEGER  | Foreign key referencing `products(id)`.                   |
 | `price`      | REAL     | The scraped price of the product.                         |
 | `scraped_at` | DATETIME | Timestamp of when the price was scraped.                  |
+
+### `migrations` Table
+
+| Column      | Type     | Description                                 |
+|-------------|----------|---------------------------------------------|
+| `id`        | INTEGER  | Primary key (auto-incremented).             |
+| `migration` | VARCHAR(255) | Name of the migration file.             |
+| `applied_at`| DATETIME | Timestamp of when the migration was applied.|
+
+
+## Table Relationships
+
+- **`sites`** to **`products`**: One-to-Many
+  - A single site can have multiple products.
+  
+- **`products`** to **`product_history`**: One-to-Many
+  - Each product can have multiple price history records.
