@@ -28,3 +28,6 @@ jobs:
 
       - name: Run Tests
         run: make test
+
+      - name: Check Formatting
+        run: make format-check
