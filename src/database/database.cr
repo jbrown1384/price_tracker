@@ -25,7 +25,18 @@ module Database
 
   def self.clear
     db = self.connection
-    db.exec "DELETE FROM prices;"
+
+    db.exec "PRAGMA foreign_keys = OFF;"
+
+    db.exec "DELETE FROM product_history;"
+    db.exec "DELETE FROM products;"
+    db.exec "DELETE FROM sites;"
+
+    db.exec "DELETE FROM sqlite_sequence WHERE name='product_history';"
+    db.exec "DELETE FROM sqlite_sequence WHERE name='products';"
+    db.exec "DELETE FROM sqlite_sequence WHERE name='sites';"
+
+    db.exec "PRAGMA foreign_keys = ON;"
   end
 
   def self.connection : DB::Database

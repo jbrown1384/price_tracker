@@ -2,11 +2,27 @@ require "spec"
 require "../spec_helper"
 
 describe Glitch do
-  it "parses products correctly from valid HTML" do
-    scraper = Glitch.new
+  before_each do
+    Database.setup
+    Database.clear
+  end
+
+  it "parse products from HTML" do
+    id = 1
+    site_name = "glitch"
+    active_status = true
+    product_name = "glitch test product"
+    price = 299.99
+
+    Database.connection.exec "INSERT INTO sites (name, active_status) VALUES (?, ?)", site_name, active_status
+    Database.connection.exec "INSERT INTO products (site_id, name, active_status) VALUES (?, ?, ?)", id, product_name, active_status
+
+    site = Site.new(id, site_name, active_status)
+    scraper = ScraperFactory.create_scraper(site)
+    scraper = Glitch.new(site)
     html = <<-HTML
       <div class="product-card">
-        <h3>AW SuperFast Roadster</h3>
+        <h3>glitch test product</h3>
         <div class="price">$299.99</div>
       </div>
       <div class="product-card">
@@ -15,16 +31,27 @@ describe Glitch do
       </div>
     HTML
 
-    products = scraper.parse_products(html)
-    products.size.should eq 1
-
-    product = products.first
-    product.name.should eq "AW SuperFast Roadster"
-    product.price.should eq 299.99
+    history = scraper.parse_products(html)
+    history.size.should eq 1
+    history.each do |product|
+      product.price.should eq price
+    end
   end
 
   it "handles HTML with no matching products" do
-    scraper = Glitch.new
+    id = 1
+    site_name = "glitch"
+    active_status = true
+    product_name = "glitch test product"
+    price = 299.99
+
+    Database.connection.exec "INSERT INTO sites (name, active_status) VALUES (?, ?)", site_name, active_status
+    Database.connection.exec "INSERT INTO products (site_id, name, active_status) VALUES (?, ?, ?)", id, product_name, active_status
+
+    site = Site.new(id, site_name, active_status)
+    scraper = ScraperFactory.create_scraper(site)
+    scraper = Glitch.new(site)
+    
     html = <<-HTML
       <div class="product-card">
         <h3>Non-Target Product</h3>

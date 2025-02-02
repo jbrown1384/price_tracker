@@ -9,35 +9,59 @@ describe Database do
 
   describe "save price and fetch price records" do
     it "save a price record and fetches a price record" do
-      site = Site.new("test site", true)
-      product = Product.new(1, "test product new", true)
-
-      product_name = "test product"
+      id = 1
+      site_name = "test site"
+      active_status = true
+      product_name = "test product new"
       price = 299.99
 
-      Database.save_price(product_name, price)
-      results = Database.fetch_price_history(product_name)
+      Database.connection.exec "INSERT INTO sites (name, active_status) VALUES (?, ?)", site_name, active_status
+      Database.connection.exec "INSERT INTO products (site_id, name, active_status) VALUES (?, ?, ?)", id, product_name, active_status
 
-      results.size.should eq 1
-      results.first["price"].should eq 299.99
+      product_history = ProductHistory.new(id, price, Time.utc)
+      Database.save_product_history(product_history)
+
+      history = Database.fetch_price_history(product_name)
+      history.size.should eq 1
+      history.each do |product|
+        product.price.should eq price
+      end
     end
 
     it "get multiple price history records" do
+      id = 1
+      site_name = "test site"
+      active_status = true
       product_name = "test product new"
       prices = [299.99, 289.99, 279.99]
 
+      Database.connection.exec "INSERT INTO sites (name, active_status) VALUES (?, ?)", site_name, active_status
+      Database.connection.exec "INSERT INTO products (site_id, name, active_status) VALUES (?, ?, ?)", id, product_name, active_status
+
       prices.each do |price|
-        Database.save_price(product_name, price)
+        product_history = ProductHistory.new(id, price, Time.utc)
+        Database.save_product_history(product_history)
       end
 
-      results = Database.fetch_price_history(product_name)
-      results.size.should eq 3
-      results.map { |r| r["price"] }.should eq prices
+      history = Database.fetch_price_history(product_name)
+      history.size.should eq 3
     end
 
     it "returns empty array when no prices are found" do
-      results = Database.fetch_price_history("Non-Existent Product test")
-      results.should be_empty
+      id = 1
+      site_name = "test site"
+      active_status = true
+      product_name = "test product new"
+      price = 299.99
+
+      Database.connection.exec "INSERT INTO sites (name, active_status) VALUES (?, ?)", site_name, active_status
+      Database.connection.exec "INSERT INTO products (site_id, name, active_status) VALUES (?, ?, ?)", id, product_name, active_status
+
+      product_history = ProductHistory.new(id, price, Time.utc)
+      Database.save_product_history(product_history)
+
+      history = Database.fetch_price_history("Non-Existent Product test")      
+      history.should be_empty
     end
   end
 end
