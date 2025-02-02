@@ -1,17 +1,16 @@
-require "../brands/glitch"
+require "../sites/glitch"
 
 module ScraperFactory
-  def self.create_scraper(brand : String) : ScraperInterface::Base
-    case brand.downcase
+  def self.create_scraper(site : Site) : ScraperInterface::Base
+    Utils::Logger.info("creating scraper for site: #{site.name}")
+    case site.name.downcase
     when "glitch"
-      Utils::Logger.info("creating scraper for brand: #{brand}")
-      Glitch.new
+      Glitch.new(site)
     else
-      Utils::Logger.error("could not find a scraper for brand: #{brand}")
-      raise "Unknown brand: #{brand}"
+      raise "Unknown site: #{site.name}"
     end
   rescue ex
-    Utils::Logger.critical("initializing scraper for #{brand}: #{ex.message}")
+    Utils::Logger.critical("initializing scraper for #{site.name}: #{ex.message}")
     raise ex
   end
 end

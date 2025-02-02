@@ -59,13 +59,13 @@ async function triggerScrape() {
     try {
         const response = await fetch('/scrape', { method: 'POST' });
         if (response.ok) {
-            console.log('Scrape triggered successfully!');
+            console.log('scrape triggered successfully!');
             location.reload();
         } else {
-            console.error('Failed to trigger scrape:', response);
+            console.error('scrape execution failed:', response);
         }
     } catch (error) {
-        console.error('Error triggering scrape:', error);
+        console.error('scrape execution failed:', error);
     }
 }
 

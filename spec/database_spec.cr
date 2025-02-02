@@ -13,7 +13,7 @@ describe Database do
       price = 299.99
 
       Database.save_price(product_name, price)
-      results = Database.fetch_prices(product_name)
+      results = Database.fetch_price_history(product_name)
 
       results.size.should eq 1
       results.first["price"].should eq 299.99
@@ -27,13 +27,13 @@ describe Database do
         Database.save_price(product_name, price)
       end
 
-      results = Database.fetch_prices(product_name)
+      results = Database.fetch_price_history(product_name)
       results.size.should eq 3
       results.map { |r| r["price"] }.should eq prices
     end
 
     it "returns empty array when no prices are found" do
-      results = Database.fetch_prices("Non-Existent Product test")
+      results = Database.fetch_price_history("Non-Existent Product test")
       results.should be_empty
     end
   end

@@ -1,28 +1,25 @@
 module Controllers
   module DashboardController
-    def self.index
+    def self.index(context : HTTP::Server::Context) 
       product_name = "AW SuperFast Roadster"
-      raw_data = Database.fetch_prices(product_name)
+      product_history = Database.fetch_price_history(product_name)
 
       minutes_in_hour = (0..59).map(&.to_s)
       prices_by_minute = Hash(Int32, Float64?).new
       (0..59).each { |minute| prices_by_minute[minute] = nil }
-
-      raw_data.each do |entry|
+      Utils::Logger.info("pre-history")
+      product_history.each do |history|
+        Utils::Logger.info("history found")
         begin
-          scraped_at = Time.parse(
-            entry["scraped_at"].to_s,
-            "%Y-%m-%d %H:%M:%S.%L",
-            Time::Location::UTC
-          )
-          mapped_minute = scraped_at.minute
-          price = entry["price"].to_f
-          prices_by_minute[mapped_minute] = price
+          mapped_minute = history.scraped_at.minute
+          puts history.price
+          prices_by_minute[mapped_minute] = history.price
+          puts prices_by_minute[mapped_minute]
         rescue ex
-          Utils::Logger.warning("parsing entry #{entry}: #{ex.message}")
+          Utils::Logger.warning("parsing entry #{history.product_id}: #{ex.message}")
         end
       end
-
+      
       x_axis_minutes = minutes_in_hour
       price_values = (0..59).map { |minute| prices_by_minute[minute] }
 
