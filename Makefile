@@ -19,10 +19,6 @@ down:
 	@echo "Stopping and removing containers, networks, and volumes related to the project..."
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down --rmi local --volumes --remove-orphans
 
-format-check:
-	@echo "Running crystal format check..."
-	docker run --rm $(IMAGE_NAME) crystal tool format --check
-
 test: build
 	@echo "Running tests inside Docker container..."
 	docker run --rm $(IMAGE_NAME) crystal spec
